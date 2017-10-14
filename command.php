@@ -18,8 +18,9 @@ $message = new message();
 $isAgentAvailable = $core->getStatusValue($agent);
 if($isAgentAvailable == true)
 {
+    /* If an agent is available */
     $displayMessage = $message->getMessage("Agent", true, $agent);
-    print "line 23 " . $displayMessage;
+    print $displayMessage;
     sleep(3);
     
     $call = $core->getStatus(1,2);
@@ -28,11 +29,12 @@ if($isAgentAvailable == true)
     $callStatus = $core->getCallStatus($call, "TL");
     $code = $callStatus['code'];
     $msg  = $callStatus['message'];
-    print "line 31 " .$msg;
+    print $msg;
     sleep(2);
     
     if($code == 1)
     {
+        /* If issue is unsolved by agent, escalate to TL */
         $tl = $core->getStatus(1, 2);
         $isTLAvailable = $core->getStatusValue($tl);  
         
@@ -40,24 +42,33 @@ if($isAgentAvailable == true)
         {
             /* TL to take the call */
             $displayMessage = $message->getMessage("TL", true, null);
-            print "line 43 " .$displayMessage;
+            print $displayMessage;
             sleep(2);
 
-            //GET STATUS OF CALL
+            /* GET STATUS OF CALL */
             $call = $core->getStatus(1,2);
             print "TL Call # $call \n"; sleep(1);
 
             $callStatus = $core->getCallStatus($call, "PM");
             $code = $callStatus['code'];
             $msg  = $callStatus['message'];
-            print "line 53 " .$msg;
+            print $msg;
             sleep(2);
+            
+            /* If TL not able to solve issue */
+            if($code == 1)
+            {                
+                print "PM is taking the call...\n";
+                sleep(3);
+                print "Call ended. Issue solved \n";
+                sleep(1);
+            }            
         }
         else
-        {
-            print "entered in else \n";
+        {            
+            /* TL not available and escalating to PM */
             $displayMessage = $message->getMessage("TL", false, null);
-            print "line 60 " . $displayMessage;
+            print $displayMessage;
             sleep(2);
             print "PM is taking the call...\n";
             sleep(3);
@@ -68,6 +79,7 @@ if($isAgentAvailable == true)
 }
 else
 {    
+    /* If an agent is not available escalte to TL */
     $displayMessage = $message->getMessage("Agent", false, null);
     print $displayMessage;
     sleep(3);
@@ -90,11 +102,21 @@ else
         $callStatus = $core->getCallStatus($call, "PM");
         $code = $callStatus['code'];
         $msg  = $callStatus['message'];
-        print "line 92 " .$msg;
+        print $msg;
         sleep(2);
+        
+        /* If TL not able to solve issue */
+        if($code == 1)
+        {            
+            print "PM is taking the call...\n";
+            sleep(3);
+            print "Call ended. Issue solved \n";
+            sleep(1);
+        }
     }   
     else
     {
+        /* TL not available and escalating to PM */
         $displayMessage = $message->getMessage("TL", false, null);
         print $displayMessage;
         sleep(2);

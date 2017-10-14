@@ -1,13 +1,12 @@
 <?php
 /**
- * @Main class
- * 
+ * @Core class
+ * @Handles request from command.php
+ * @Serves as Controller
  */
+
 class core
-{    
-    private static $agentAvailable = false;
-    private static $tlAvailable = false;
-    private static $pmAvailable = true;
+{   
     private $status = 0;
     private $availability = false;
     private $supportStatus = "";             
