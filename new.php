@@ -1,6 +1,6 @@
 <?php
 
 print "new file";
-di;
+print "this is a test";
 
 ?>
